@@ -23,6 +23,7 @@ Sblerboy est un bot Discord permettant de jouer à des jeux de Gameboy directeme
 - Un serveur Discord dont vous êtes l'admin et qui possède au moins 3 salons textuels.
 - Un de ces salons doit être réservé au bot, il doit être le seul à pouvoir envoyer des messages dedans. Il doit aussi être le seul à pouvoir ajouter des réactions aux messages dans ce salon.
 - Un bot Discord dont vous êtes le créateur.
+- Une rom de jeu de gameboy au format .gb
 
 ## Installation
 
@@ -36,6 +37,8 @@ git clone https://github.com/Sblerky/Sblerboy-Open-Source.git
     * ID_LOG_CHANNEL correspond à l'ID du salon textuel dans lequel le bot va envoyer les différentes actions enregistrées
     * ID_CHAT_CHANNEL correspond à l'ID du salon textuel dans lequel vous souhaitez que les joueurs discutent du jeu
     * BOT_TOKEN est le token de votre bot Discord
+
+- Renommer votre rom en "rom.gb" et la placer dans le répertoire "rom"
 
 - Lancer le bot
 ```sh
