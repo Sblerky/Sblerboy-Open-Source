@@ -1,0 +1,3 @@
+*.gb
+*.state
+__pycache__/
