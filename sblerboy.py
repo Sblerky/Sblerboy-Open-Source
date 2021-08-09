@@ -9,19 +9,9 @@ import io
 import time
 import sys
 import configparser
+import ast
 
-EMOTE_LIST = ["up:861864407716724737", # Up
-"up_two:867683970565144606", # Up
-"down:861864408141004860", # Down
-"down_two:867683970555314186", # Down
-"left:861864408169578516", # Left
-"left_two:867683970803433472", # Left
-"right:861864408149786644", # Right
-"right_two:867683970538536990", # Right
-"a_button:861864408119377930", # A
-"b_button:861864408141660171", # B
-"start:861865017652543538", # Start
-"select:861864407905599509"] # Select
+EMOTE_LIST = None
 ID_CHANNEL = 0
 ID_GUILD = 0
 ID_LOG_CHANNEL = 0
@@ -61,6 +51,7 @@ ID_CHANNEL = int(config['DEFAULT']['ID_CHANNEL'])
 ID_GUILD = int(config['DEFAULT']['ID_GUILD'])
 ID_LOG_CHANNEL = int(config['DEFAULT']['ID_LOG_CHANNEL'])
 ID_CHAT_CHANNEL = int(config['DEFAULT']['ID_CHAT_CHANNEL'])
+EMOTE_LIST = ast.literal_eval(config['DEFAULT']['EMOTE_LIST'])
 BOT_TOKEN = config['DEFAULT']['BOT_TOKEN']
 
 def tick_thread():
@@ -153,48 +144,39 @@ async def process_reaction(ctx, emoji, user):
     global has_reacted
     global main_message
     full_emoji_name = emoji.name + ":" + str(emoji.id)
-    if full_emoji_name in EMOTE_LIST :
+    if full_emoji_name in EMOTE_LIST or emoji.name in EMOTE_LIST:
         has_reacted = True
         # Let the user know it's being processed
         await main_message.add_reaction("\U00002705")
         # Big ugly switch
         if full_emoji_name == EMOTE_LIST[0]:
             await up(1)
-            field = "up_button"
         if full_emoji_name == EMOTE_LIST[1]:
             await up(3)
-            field = "up_button"
         if full_emoji_name == EMOTE_LIST[2]:
             await down(1)
-            field = "down_button"
         if full_emoji_name == EMOTE_LIST[3]:
             await down(3)
-            field = "down_button"
         if full_emoji_name == EMOTE_LIST[4]:
             await left(1)
-            field = "left_button"
         if full_emoji_name == EMOTE_LIST[5]:
             await left(3)
-            field = "left_button"
         if full_emoji_name == EMOTE_LIST[6]:
             await right(1)
-            field = "right_button"
         if full_emoji_name == EMOTE_LIST[7]:
             await right(3)
-            field = "right_button"
         if full_emoji_name == EMOTE_LIST[8]:
             await a()
-            field = "a_button"
         if full_emoji_name == EMOTE_LIST[9]:
             await b()
-            field = "b_button"
         if full_emoji_name == EMOTE_LIST[10]:
             await start()
-            field = "start_button"
         if full_emoji_name == EMOTE_LIST[11]:
             await select()
-            field = "select_button"
-        await proceed(ctx, full_emoji_name, user)
+        if emoji.id == None :
+            await proceed(ctx, emoji.name, user)
+        else :
+            await proceed(ctx, full_emoji_name, user)
         await main_message.clear_reaction("\U00002705")
         has_reacted = False
 
