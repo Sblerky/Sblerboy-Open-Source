@@ -144,7 +144,9 @@ async def process_reaction(ctx, emoji, user):
     global has_reacted
     global main_message
     full_emoji_name = emoji.name + ":" + str(emoji.id)
-    if full_emoji_name in EMOTE_LIST or emoji.name in EMOTE_LIST:
+    if emoji.name in EMOTE_LIST:
+        full_emoji_name = emoji.name
+    if full_emoji_name in EMOTE_LIST:
         has_reacted = True
         # Let the user know it's being processed
         await main_message.add_reaction("\U00002705")
@@ -173,10 +175,7 @@ async def process_reaction(ctx, emoji, user):
             await start()
         if full_emoji_name == EMOTE_LIST[11]:
             await select()
-        if emoji.id == None :
-            await proceed(ctx, emoji.name, user)
-        else :
-            await proceed(ctx, full_emoji_name, user)
+        await proceed(ctx, full_emoji_name, user)
         await main_message.clear_reaction("\U00002705")
         has_reacted = False
 
@@ -264,7 +263,10 @@ async def log_action(emoji, user):
     new_image = new_image.resize((320, 288))
 
     embed=discord.Embed(title="Action enregistrée", description="", color=0xeeb840)
-    embed.add_field(name="Informations sur le joueur: ", value="Le joueur <@"+str(user.id)+"> a réagi avec <:" + emoji + ">.", inline=False)
+    if ":" in emoji:
+        embed.add_field(name="Informations sur le joueur: ", value="Le joueur <@"+str(user.id)+"> a réagi avec <:" + emoji + ">.", inline=False)
+    else :
+        embed.add_field(name="Informations sur le joueur: ", value="Le joueur <@"+str(user.id)+"> a réagi avec " + emoji + ".", inline=False)
     embed.set_image(url="attachment://image.png")
     embed.set_thumbnail(url=user.avatar_url)
 
