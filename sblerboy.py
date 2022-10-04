@@ -30,7 +30,8 @@ intents = discord.Intents.default()
 intents.presences = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='%', description='Emulating...', intents=intents)
+bot = commands.Bot(command_prefix='%',
+                   description='Emulating...', intents=intents)
 
 # Launch Pyboy
 pyboy = PyBoy('rom/rom.gb', window_type="headless")
@@ -54,50 +55,57 @@ ID_CHAT_CHANNEL = int(config['DEFAULT']['ID_CHAT_CHANNEL'])
 EMOTE_LIST = ast.literal_eval(config['DEFAULT']['EMOTE_LIST'])
 BOT_TOKEN = config['DEFAULT']['BOT_TOKEN']
 
+
 def tick_thread():
     global input_wanted
     old_input = input_wanted
     old_time = int(round(time.time() * 1000))
-    while True :
+    while True:
         if old_input != input_wanted:
             pyboy.send_input(input_wanted)
             old_input = input_wanted
         old_time = tick_pyboy(old_time)
 
+
 def tick_pyboy(old_time):
     now = int(round(time.time() * 1000))
-    if now - old_time > 1000 / FRAME_PER_SECONDS :
+    if now - old_time > 1000 / FRAME_PER_SECONDS:
         pyboy.tick()
         return now
     return old_time
 
+
 pyboy_thread = threading.Thread(target=tick_thread)
 pyboy_thread.start()
+
 
 def set_input_wanted(input):
     global input_wanted
     input_wanted = input
 
+
 async def get_main_guild():
     for guild in bot.guilds:
-        if guild.id == ID_GUILD :
+        if guild.id == ID_GUILD:
             return guild
     return 0
+
 
 async def get_channel(id_channel):
     global main_guild
     for channel in main_guild.channels:
-        if channel.id == id_channel :
+        if channel.id == id_channel:
             return channel
     return 0
 
+
 async def get_or_send_message(channel_param):
     global main_message
-    history = await channel_param.history(limit=1).flatten()
-    if len(history) > 0 :
+    history = [history async for history in channel_param.history(limit=1)]
+    if len(history) > 0:
         main_message = history[0]
         await send_new_screen(None, None, None, True)
-    else :
+    else:
         print("No message found")
         await send_new_screen(None, None, None, True)
 
@@ -112,11 +120,11 @@ async def on_ready():
     print(bot.user.id)
     activity = discord.Game(name="%help")
     main_guild = await get_main_guild()
-    if main_guild != 0 :
+    if main_guild != 0:
         main_channel = await get_channel(ID_CHANNEL)
-    if main_channel != 0 :
+    if main_channel != 0:
         await get_or_send_message(main_channel)
-    if main_guild != 0 :
+    if main_guild != 0:
         logs_channel = await get_channel(ID_LOG_CHANNEL)
         print('Init complete')
 
@@ -124,14 +132,22 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=activity)
 
 bot.remove_command('help')
+
+
 @bot.command()
 async def help(ctx):
-    embed=discord.Embed(title="Sblerboy", url="https://www.youtube.com/channel/UCLT5UPUWMaeZQznyQb1FsKA/?sub_confirmation=1", description="Le meilleur émulateur Gameboy", color=0xeeb840)
-    embed.set_author(name="Sblerboy", url="https://www.youtube.com/channel/UCLT5UPUWMaeZQznyQb1FsKA/?sub_confirmation=1", icon_url="https://st2.depositphotos.com/25611412/46754/v/600/depositphotos_467548434-stock-illustration-gameboy-flat-illistration-old-game.jpg")
-    embed.set_footer(text="Créé par Sblerky(franchement va t'abonner ça vaut le coup)")
-    fonctionnement = "Sblerboy implémente un émulateur de Gameboy directement dans discord.  Actuellement, il vous permet de jouer à Pokémon version Rouge via des réactions à un message dans <#{main_channel_format}>\n\nLe principe de fonctionnement est simple, vous appuyez sur une réaction et le bot ajoute l'emoji :white_check_mark: au message pour vous dire qu'il a bien pris en compte votre action. Ensuite il va retranscrire cette action dans l'émulateur et mettre à jour le screen du message avec le nouvel état du jeu. Quand le bot enlève l'emoji :white_check_mark: , il est prêt à recevoir une nouvelle action (mais pas avant).\n\nLe but est bien sur de finir le jeu. Vous pouvez suivre l'avancement dans le salon <#{logs_channel_format}>  et vous pouvez discuter du jeu ou faire remonter des bugs dans <#{chat_channel_format}>\n\nA la fin du jeu, la personne qui aura le plus contribué à l'avancement du jeu recevra en récompense un rôle unique ainsi que le statut de VIP du serveur (si elle ne l'est pas déjà). ".format(main_channel_format=ID_CHANNEL, logs_channel_format=ID_LOG_CHANNEL, chat_channel_format=ID_CHAT_CHANNEL)
-    embed.add_field(name="Principe de fonctionnement", value=fonctionnement, inline=False)
+    embed = discord.Embed(title="Sblerboy", url="https://www.youtube.com/channel/UCLT5UPUWMaeZQznyQb1FsKA/?sub_confirmation=1",
+                          description="Le meilleur émulateur Gameboy", color=0xeeb840)
+    embed.set_author(name="Sblerboy", url="https://www.youtube.com/channel/UCLT5UPUWMaeZQznyQb1FsKA/?sub_confirmation=1",
+                     icon_url="https://st2.depositphotos.com/25611412/46754/v/600/depositphotos_467548434-stock-illustration-gameboy-flat-illistration-old-game.jpg")
+    embed.set_footer(
+        text="Créé par Sblerky(franchement va t'abonner ça vaut le coup)")
+    fonctionnement = "Sblerboy implémente un émulateur de Gameboy directement dans discord.  Actuellement, il vous permet de jouer à Pokémon version Rouge via des réactions à un message dans <#{main_channel_format}>\n\nLe principe de fonctionnement est simple, vous appuyez sur une réaction et le bot ajoute l'emoji :white_check_mark: au message pour vous dire qu'il a bien pris en compte votre action. Ensuite il va retranscrire cette action dans l'émulateur et mettre à jour le screen du message avec le nouvel état du jeu. Quand le bot enlève l'emoji :white_check_mark: , il est prêt à recevoir une nouvelle action (mais pas avant).\n\nLe but est bien sur de finir le jeu. Vous pouvez suivre l'avancement dans le salon <#{logs_channel_format}>  et vous pouvez discuter du jeu ou faire remonter des bugs dans <#{chat_channel_format}>\n\nA la fin du jeu, la personne qui aura le plus contribué à l'avancement du jeu recevra en récompense un rôle unique ainsi que le statut de VIP du serveur (si elle ne l'est pas déjà). ".format(
+        main_channel_format=ID_CHANNEL, logs_channel_format=ID_LOG_CHANNEL, chat_channel_format=ID_CHAT_CHANNEL)
+    embed.add_field(name="Principe de fonctionnement",
+                    value=fonctionnement, inline=False)
     await ctx.send(embed=embed)
+
 
 @bot.event
 async def on_raw_reaction_add(ctx):
@@ -139,6 +155,7 @@ async def on_raw_reaction_add(ctx):
     global has_reacted
     if ctx.message_id == main_message.id and ctx.member.id != bot.user.id and not has_reacted:
         await process_reaction(ctx, ctx.emoji, ctx.member)
+
 
 async def process_reaction(ctx, emoji, user):
     global has_reacted
@@ -179,49 +196,58 @@ async def process_reaction(ctx, emoji, user):
         await main_message.clear_reaction("\U00002705")
         has_reacted = False
 
+
 async def start():
     set_input_wanted(WindowEvent.PRESS_BUTTON_START)
     await asyncio.sleep(PUSH_TIME)
     set_input_wanted(WindowEvent.RELEASE_BUTTON_START)
+
 
 async def select():
     set_input_wanted(WindowEvent.PRESS_BUTTON_SELECT)
     await asyncio.sleep(PUSH_TIME)
     set_input_wanted(WindowEvent.RELEASE_BUTTON_SELECT)
 
+
 async def a():
     set_input_wanted(WindowEvent.PRESS_BUTTON_A)
     await asyncio.sleep(PUSH_TIME)
     set_input_wanted(WindowEvent.RELEASE_BUTTON_A)
+
 
 async def b():
     set_input_wanted(WindowEvent.PRESS_BUTTON_B)
     await asyncio.sleep(PUSH_TIME)
     set_input_wanted(WindowEvent.RELEASE_BUTTON_B)
 
+
 async def up(multiplier):
-    for i in range (0, multiplier) :
+    for i in range(0, multiplier):
         set_input_wanted(WindowEvent.PRESS_ARROW_UP)
         await asyncio.sleep(PUSH_TIME)
         set_input_wanted(WindowEvent.RELEASE_ARROW_UP)
 
+
 async def down(multiplier):
-    for i in range (0, multiplier) :
+    for i in range(0, multiplier):
         set_input_wanted(WindowEvent.PRESS_ARROW_DOWN)
         await asyncio.sleep(PUSH_TIME)
         set_input_wanted(WindowEvent.RELEASE_ARROW_DOWN)
 
+
 async def left(multiplier):
-    for i in range (0, multiplier) :
+    for i in range(0, multiplier):
         set_input_wanted(WindowEvent.PRESS_ARROW_LEFT)
         await asyncio.sleep(PUSH_TIME)
         set_input_wanted(WindowEvent.RELEASE_ARROW_LEFT)
 
+
 async def right(multiplier):
-    for i in range (0, multiplier) :
+    for i in range(0, multiplier):
         set_input_wanted(WindowEvent.PRESS_ARROW_RIGHT)
         await asyncio.sleep(PUSH_TIME)
         set_input_wanted(WindowEvent.RELEASE_ARROW_RIGHT)
+
 
 async def proceed(ctx, emoji, user):
     await commit()
@@ -233,27 +259,32 @@ async def commit():
     save_file = open("rom/save_file.state", "wb")
     pyboy.save_state(save_file)
 
+
 async def send_new_screen(image, emoji, user, is_first):
     global main_message
     global main_channel
-    if is_first :
+    if is_first:
         if main_message != None:
             await main_message.delete()
-        embed = discord.Embed(title="Pokémon Rouge", description="", color=0xeeb840)
-        embed.add_field(name="Initialisation", value="Initialiser le jeu en appuyant sur select", inline=False)
+        embed = discord.Embed(title="Pokémon Rouge",
+                              description="", color=0xeeb840)
+        embed.add_field(name="Initialisation",
+                        value="Initialiser le jeu en appuyant sur select", inline=False)
         main_message = await main_channel.send(embed=embed)
-        for emote in EMOTE_LIST :
+        for emote in EMOTE_LIST:
             await main_message.add_reaction(emote)
-    else :
+    else:
         topic = main_message.channel.topic
         embed = main_message.embeds[0]
         embed.clear_fields()
-        if topic != None :
-            embed.add_field(name="__Objectif actuel :__", value=topic, inline=False)
+        if topic != None:
+            embed.add_field(name="__Objectif actuel :__",
+                            value=topic, inline=False)
         embed.set_image(url=image)
         await main_message.edit(embed=embed)
         cache_msg = await main_channel.fetch_message(main_message.id)
         await main_message.remove_reaction(emoji, user)
+
 
 async def log_action(emoji, user):
     global logs_channel
@@ -262,13 +293,16 @@ async def log_action(emoji, user):
     new_image = screen_object.screen_image()
     new_image = new_image.resize((320, 288))
 
-    embed=discord.Embed(title="Action enregistrée", description="", color=0xeeb840)
+    embed = discord.Embed(title="Action enregistrée",
+                          description="", color=0xeeb840)
     if ":" in emoji:
-        embed.add_field(name="Informations sur le joueur: ", value="Le joueur <@"+str(user.id)+"> a réagi avec <:" + emoji + ">.", inline=False)
-    else :
-        embed.add_field(name="Informations sur le joueur: ", value="Le joueur <@"+str(user.id)+"> a réagi avec " + emoji + ".", inline=False)
+        embed.add_field(name="Informations sur le joueur: ", value="Le joueur <@" +
+                        str(user.id)+"> a réagi avec <:" + emoji + ">.", inline=False)
+    else:
+        embed.add_field(name="Informations sur le joueur: ", value="Le joueur <@" +
+                        str(user.id)+"> a réagi avec " + emoji + ".", inline=False)
     embed.set_image(url="attachment://image.png")
-    embed.set_thumbnail(url=user.avatar_url)
+    embed.set_thumbnail(url=user.avatar)
 
     with io.BytesIO() as image_binary:
         new_image.save(image_binary, 'PNG')
