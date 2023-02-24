@@ -19,10 +19,10 @@ Sblerboy est un bot Discord permettant de jouer à des jeux de Gameboy directeme
 ![alt text](https://cdn.discordapp.com/attachments/849667753295347745/874206021818675240/unknown.png)
 
 ## Pré-requis
-- Une installation de python 3 fonctionnelle ainsi que les modules python Discord et Pyboy.
+- Une installation de python 3 fonctionnelle ainsi que les modules python Discord, Pyboy et Pillow. Exemple d'installation : `python -m pip install Pillow`
 - Un serveur Discord dont vous êtes l'admin et qui possède au moins 3 salons textuels.
 - Un de ces salons doit être réservé au bot, il doit être le seul à pouvoir envoyer des messages dedans. Il doit aussi être le seul à pouvoir ajouter des réactions aux messages dans ce salon.
-- Un bot Discord dont vous êtes le créateur.
+- Un bot Discord dont vous êtes le créateur. Il doit avoir les 3 [intents d'activés](https://discord.com/developers/docs/topics/gateway#enabling-privileged-intents).
 - Une rom de jeu de gameboy au format .gb
 
 ## Installation
