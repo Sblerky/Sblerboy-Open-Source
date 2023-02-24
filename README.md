@@ -1,4 +1,5 @@
 # Sblerboy-Open-Source
+
 ## _La version open source du bot Discord Sblerboy_
 
 Sblerboy est un bot Discord permettant de jouer à des jeux de Gameboy directement dans Discord.
@@ -19,7 +20,8 @@ Sblerboy est un bot Discord permettant de jouer à des jeux de Gameboy directeme
 ![alt text](https://cdn.discordapp.com/attachments/849667753295347745/874206021818675240/unknown.png)
 
 ## Pré-requis
-- Une installation de python 3 fonctionnelle ainsi que les modules python Discord, Pyboy et Pillow. Exemple d'installation : `python -m pip install Pillow`
+
+- Une installation de python 3 fonctionnelle
 - Un serveur Discord dont vous êtes l'admin et qui possède au moins 3 salons textuels.
 - Un de ces salons doit être réservé au bot, il doit être le seul à pouvoir envoyer des messages dedans. Il doit aussi être le seul à pouvoir ajouter des réactions aux messages dans ce salon.
 - Un bot Discord dont vous êtes le créateur. Il doit avoir les 3 [intents d'activés](https://discord.com/developers/docs/topics/gateway#enabling-privileged-intents).
@@ -28,19 +30,30 @@ Sblerboy est un bot Discord permettant de jouer à des jeux de Gameboy directeme
 ## Installation
 
 - Cloner le repo
+
 ```sh
 git clone https://github.com/Sblerky/Sblerboy-Open-Source.git
 ```
+
+- Installer les libraires
+
+```sh
+cd Sblerboy-Open-Source
+pip install -r requirements.txt
+```
+
 - Remplir le fichier config.ini avec les valeurs qui correspondent à votre cas d'utilisation
-    * ID_CHANNEL correspond à l'ID du salon textuel dans lequel le bot va envoyer son message pour que les joueurs réagissent
-    * ID_GUILD correspond à l'ID du serveur Discord dans lequel le bot va opérer
-    * ID_LOG_CHANNEL correspond à l'ID du salon textuel dans lequel le bot va envoyer les différentes actions enregistrées
-    * ID_CHAT_CHANNEL correspond à l'ID du salon textuel dans lequel vous souhaitez que les joueurs discutent du jeu
-    * BOT_TOKEN est le token de votre bot Discord
+
+  - ID_CHANNEL correspond à l'ID du salon textuel dans lequel le bot va envoyer son message pour que les joueurs réagissent
+  - ID_GUILD correspond à l'ID du serveur Discord dans lequel le bot va opérer
+  - ID_LOG_CHANNEL correspond à l'ID du salon textuel dans lequel le bot va envoyer les différentes actions enregistrées
+  - ID_CHAT_CHANNEL correspond à l'ID du salon textuel dans lequel vous souhaitez que les joueurs discutent du jeu
+  - BOT_TOKEN est le token de votre bot Discord
 
 - Renommer votre rom en "rom.gb" et la placer dans le répertoire "rom"
 
 - Lancer le bot
+
 ```sh
 python3 sblerboy.py
 ```
