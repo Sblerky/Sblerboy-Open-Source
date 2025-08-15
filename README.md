@@ -15,11 +15,14 @@ Les joueurs contrôlent la partie en réagissant à un message dédié, et toute
 
 **Exemple en jeu :**
 
-![Exemple de salon de jeu](https://cdn.discordapp.com/attachments/849667753295347745/874205955196346418/unknown.png)
+<img width="993" height="570" alt="image" src="https://github.com/user-attachments/assets/1f1a2677-943e-409b-a9dc-937ebf313cb3" />
+
+<img width="1023" height="576" alt="image" src="https://github.com/user-attachments/assets/d8fcff81-43f4-4d31-b6f2-7034d5411436" />
+
 
 **Exemple de logs :**
 
-![Exemple de salon de logs](https://cdn.discordapp.com/attachments/849667753295347745/874206021818675240/unknown.png)
+<img width="569" height="563" alt="image" src="https://github.com/user-attachments/assets/54b87922-c856-4a93-b9a2-2175a4a928fc" />
 
 ---
 
